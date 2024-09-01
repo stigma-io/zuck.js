@@ -139,6 +139,10 @@ export const optionsDefault = (option?: ZuckObject['option']): Options => ({
                     </div>
                   </div>
 
+                  <div class="slides-pointers">
+                    <div class="wrap"></div>
+                  </div>
+
                   <div class="right">
                     <span class="time">
                       ${
@@ -149,10 +153,6 @@ export const optionsDefault = (option?: ZuckObject['option']): Options => ({
                     <span class="loading"></span>
                     <a class="close" tabIndex="2">&times;</a>
                   </div>
-                </div>
-
-                <div class="slides-pointers">
-                  <div class="wrap"></div>
                 </div>
 
                 ${

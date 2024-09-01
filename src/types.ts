@@ -162,6 +162,9 @@ export type ZuckObject = {
     };
   };
 
+  pauseSlide?: () => void
+  resumeSlide?: () => void
+
   updateStorySeenPosition: () => void;
   playVideoItem: (
     storyViewer?: Maybe<HTMLElement>,

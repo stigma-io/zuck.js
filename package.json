@@ -1,5 +1,5 @@
 {
-  "name": "zuck.js",
+  "name": "@stigma-io/zuck",
   "version": "2.1.0",
   "description": "A javascript library that lets you add stories EVERYWHERE.",
   "homepage": "https://ramon.codes/projects/zuck.js",
@@ -30,7 +30,11 @@
     "url": "https://github.com/ramonszo/zuck.js/issues"
   },
   "exports": {
-    ".": "./dist/zuck.js",
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "types": "./src/types.ts"
+    },
     "./skins/facesnap": "./dist/skins/facesnap.css",
     "./skins/snapgram": "./dist/skins/snapgram.css",
     "./skins/snapssenger": "./dist/skins/snapssenger.css",

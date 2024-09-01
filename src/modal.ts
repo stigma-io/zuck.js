@@ -6,14 +6,7 @@ import {
   TimelineItem,
   ZuckObject
 } from 'types';
-import {
-  findPos,
-  hasWindow,
-  onAnimationEnd,
-  onTransitionEnd,
-  prepend,
-  safeNum
-} from './utils';
+import {findPos, hasWindow, onAnimationEnd, onTransitionEnd, prepend, safeNum} from './utils';
 
 export const modal = (zuck: ZuckObject) => {
   const id = zuck.id;
@@ -21,13 +14,13 @@ export const modal = (zuck: ZuckObject) => {
   let modalZuckContainer =
     document.querySelector<ModalContainer>('#zuck-modal');
 
-  if (!modalZuckContainer && !zuck.hasModal) {
+  if(!modalZuckContainer && !zuck.hasModal) {
     zuck.hasModal = true;
 
     modalZuckContainer = document.createElement('div');
     modalZuckContainer.id = 'zuck-modal';
 
-    if (zuck.option('cubeEffect')) {
+    if(zuck.option('cubeEffect')) {
       modalZuckContainer.className = 'with-cube';
     }
 
@@ -35,21 +28,21 @@ export const modal = (zuck: ZuckObject) => {
     modalZuckContainer.style.display = 'none';
 
     modalZuckContainer.setAttribute('tabIndex', '1');
-    modalZuckContainer.onkeyup = ({ keyCode }) => {
+    modalZuckContainer.onkeyup = ({keyCode}) => {
       const code = keyCode;
 
-      if (code === 27) {
+      if(code === 27) {
         modalZuckContainer.modal.close();
-      } else if (code === 13 || code === 32) {
+      } else if(/*code === 13 ||*/ code === 32) {
         modalZuckContainer.modal.next();
       }
     };
 
-    if (zuck.option('openEffect')) {
+    if(zuck.option('openEffect')) {
       modalZuckContainer?.classList.add('with-effects');
     }
 
-    if (zuck.option('rtl')) {
+    if(zuck.option('rtl')) {
       modalZuckContainer?.classList.add('rtl');
     }
 
@@ -58,8 +51,8 @@ export const modal = (zuck: ZuckObject) => {
         '#zuck-modal-content'
       );
 
-      if (modalZuckContainer?.classList.contains('closed')) {
-        if (modalContent) {
+      if(modalZuckContainer?.classList.contains('closed')) {
+        if(modalContent) {
           modalContent.innerHTML = '';
         }
         modalZuckContainer.style.display = 'none';
@@ -71,13 +64,13 @@ export const modal = (zuck: ZuckObject) => {
     document.body.appendChild(modalZuckContainer);
   }
 
-  const translate = function (
+  const translate = function(
     element?: Maybe<HTMLElement>,
     to?: number,
     duration?: number,
     ease?: string | null
   ) {
-    if (to === undefined || (to && isNaN(to))) {
+    if(to === undefined || (to && isNaN(to))) {
       return;
     }
 
@@ -86,17 +79,17 @@ export const modal = (zuck: ZuckObject) => {
       document.querySelector<HTMLElement>('#zuck-modal')?.offsetWidth || 1;
     const to3d = (Math.abs(to) / modalWidth) * 90 * direction;
 
-    if (zuck.option('cubeEffect')) {
+    if(zuck.option('cubeEffect')) {
       const scaling = to3d === 0 ? 'scale(0.95)' : 'scale(0.930,0.930)';
       const modalContent = document.querySelector<HTMLElement>(
         '#zuck-modal-content'
       );
 
-      if (modalContent) {
+      if(modalContent) {
         modalContent.style.transform = scaling;
       }
 
-      if (to3d < -90 || to3d > 90) {
+      if(to3d < -90 || to3d > 90) {
         return false;
       }
     }
@@ -105,8 +98,8 @@ export const modal = (zuck: ZuckObject) => {
       ? `translate3d(${to}px, 0, 0)`
       : `rotateY(${to3d}deg)`;
 
-    if (element) {
-      if (ease) {
+    if(element) {
+      if(ease) {
         element.style.transitionTimingFunction = ease;
       }
 
@@ -115,37 +108,39 @@ export const modal = (zuck: ZuckObject) => {
     }
   };
 
-  const fullScreen = function (elem?: Maybe<HTMLElement>, cancel?: boolean) {
+  const fullScreen = function(elem?: Maybe<HTMLElement>, cancel?: boolean) {
     const anyDocument = document as DocumentWithFullscreen;
     const anyElem = elem as DocumentElementWithFullscreen;
 
     try {
-      if (cancel) {
-        if (
+      if(cancel) {
+        if(
           anyDocument.fullscreenElement ||
           anyDocument.webkitFullscreenElement ||
           anyDocument.mozFullScreenElement ||
           anyDocument.msFullscreenElement
         ) {
-          if (anyDocument.exitFullscreen) {
-            anyDocument.exitFullscreen().catch(() => {});
-          } else if (anyDocument.mozCancelFullScreen) {
-            anyDocument.mozCancelFullScreen().catch(() => {});
+          if(anyDocument.exitFullscreen) {
+            anyDocument.exitFullscreen().catch(() => {
+            });
+          } else if(anyDocument.mozCancelFullScreen) {
+            anyDocument.mozCancelFullScreen().catch(() => {
+            });
           }
         }
       } else {
-        if (anyElem.requestFullscreen) {
+        if(anyElem.requestFullscreen) {
           anyElem.requestFullscreen();
-        } else if (anyElem.msRequestFullscreen) {
+        } else if(anyElem.msRequestFullscreen) {
           anyElem.msRequestFullscreen();
-        } else if (anyElem.mozRequestFullScreen) {
+        } else if(anyElem.mozRequestFullScreen) {
           anyElem.mozRequestFullScreen();
-        } else if (anyElem.webkitRequestFullscreen) {
+        } else if(anyElem.webkitRequestFullscreen) {
           anyElem.webkitRequestFullscreen();
         }
       }
-    } catch (e) {
-      console.warn("[Zuck.js] Can't access fullscreen");
+    } catch(e) {
+      console.warn('[Zuck.js] Can\'t access fullscreen');
     }
   };
 
@@ -173,16 +168,16 @@ export const modal = (zuck: ZuckObject) => {
       )
     };
 
-    if (
+    if(
       (!slideItems.previous && !direction) ||
       (!slideItems.next && direction)
     ) {
-      if (!zuck.option('rtl')) {
+      if(!zuck.option('rtl')) {
         return false;
       }
     }
 
-    if (!direction) {
+    if(!direction) {
       target = 'previous';
       useless = 'next';
     } else {
@@ -191,10 +186,10 @@ export const modal = (zuck: ZuckObject) => {
     }
 
     const transitionTime = 600;
-    if (zuck.option('cubeEffect')) {
-      if (target === 'previous') {
+    if(zuck.option('cubeEffect')) {
+      if(target === 'previous') {
         transform = safeNum(modalContainer?.slideWidth);
-      } else if (target === 'next') {
+      } else if(target === 'next') {
         transform = safeNum(modalContainer?.slideWidth) * -1;
       }
     } else {
@@ -205,37 +200,37 @@ export const modal = (zuck: ZuckObject) => {
 
     setTimeout(() => {
       // set page data when transition complete
-      if (zuck.option('rtl')) {
+      if(zuck.option('rtl')) {
         const tmp = target;
         target = useless;
         useless = tmp;
       }
 
-      if (target !== '' && slideItems[target] && useless !== '') {
+      if(target !== '' && slideItems[target] && useless !== '') {
         const currentStory = slideItems[target]?.getAttribute('data-story-id');
         zuck.internalData.currentStory = currentStory;
 
         const oldStory = document.querySelector<HTMLElement>(
           `#zuck-modal .story-viewer.${useless}`
         );
-        if (oldStory) {
+        if(oldStory) {
           oldStory?.parentNode?.removeChild(oldStory);
         }
 
-        if (slideItems.viewing) {
+        if(slideItems.viewing) {
           slideItems.viewing?.classList.add('stopped');
           slideItems.viewing?.classList.add(useless);
           slideItems.viewing?.classList.remove('viewing');
         }
 
-        if (slideItems[target]) {
+        if(slideItems[target]) {
           slideItems[target]?.classList.remove('stopped');
           slideItems[target]?.classList.remove(target);
           slideItems[target]?.classList.add('viewing');
         }
 
         const newTimelineItem = getStoryMorningGlory(target);
-        if (newTimelineItem) {
+        if(newTimelineItem) {
           createStoryViewer(newTimelineItem, target);
         }
 
@@ -247,7 +242,7 @@ export const modal = (zuck: ZuckObject) => {
 
         let items: undefined | NodeListOf<Element> = undefined;
 
-        if (storyWrap) {
+        if(storyWrap) {
           items = storyWrap.querySelectorAll<HTMLElement>(
             '[data-index].active'
           );
@@ -258,7 +253,7 @@ export const modal = (zuck: ZuckObject) => {
             items?.[0]?.getAttribute('data-index')
           );
 
-          if (items?.[0]) {
+          if(items?.[0]) {
             items[0].innerHTML = zuck.template('viewerItemPointerProgress')(
               duration.style.cssText
             );
@@ -271,7 +266,7 @@ export const modal = (zuck: ZuckObject) => {
 
         translate(modalSlider, 0, 0, null);
 
-        if (items) {
+        if(items) {
           const storyViewer = document.querySelector<HTMLElement>(
             `#zuck-modal .story-viewer[data-story-id="${currentStory}"]`
           );
@@ -284,7 +279,7 @@ export const modal = (zuck: ZuckObject) => {
     }, transitionTime + 50);
   };
 
-  const createStoryViewer = function (
+  const createStoryViewer = function(
     storyData: TimelineItem,
     className: string,
     forcePlay?: boolean
@@ -305,13 +300,13 @@ export const modal = (zuck: ZuckObject) => {
       `#zuck-modal .story-viewer[data-story-id="${storyId}"]`
     );
 
-    if (exists) {
+    if(exists) {
       return false;
     }
 
     slides.className = 'slides';
     storyItems.forEach((item, i) => {
-      if (currentItem > i) {
+      if(currentItem > i) {
         storyData.items[i].seen = true;
         item.seen = true;
       }
@@ -323,17 +318,17 @@ export const modal = (zuck: ZuckObject) => {
     slides.innerHTML = htmlItems;
 
     const video = slides.querySelector('video');
-    const addMuted = function (video: HTMLVideoElement) {
-      if (video.muted) {
+    const addMuted = function(video: HTMLVideoElement) {
+      if(video.muted) {
         storyViewer?.classList.add('muted');
       } else {
         storyViewer?.classList.remove('muted');
       }
     };
 
-    if (video) {
+    if(video) {
       video.onwaiting = () => {
-        if (video.paused) {
+        if(video.paused) {
           storyViewer?.classList.add('paused');
           storyViewer?.classList.add('loading');
         }
@@ -349,12 +344,12 @@ export const modal = (zuck: ZuckObject) => {
 
       video.onload =
         video.onplaying =
-        video.oncanplay =
-          () => {
-            addMuted(video);
+          video.oncanplay =
+            () => {
+              addMuted(video);
 
-            storyViewer?.classList.remove('loading');
-          };
+              storyViewer?.classList.remove('loading');
+            };
 
       video.onvolumechange = () => {
         addMuted(video);
@@ -377,26 +372,26 @@ export const modal = (zuck: ZuckObject) => {
       !forcePlay ? 'stopped' : ''
     } ${zuck.option('backButton') ? 'with-back-button' : ''}`;
 
-    if (storyId) {
+    if(storyId) {
       storyViewer.setAttribute('data-story-id', storyId);
     }
 
-    if (storyViewerPointerWrap) {
+    if(storyViewerPointerWrap) {
       storyViewerPointerWrap.innerHTML = pointerItems;
     }
 
     storyViewer
-      .querySelectorAll<HTMLDivElement>('.close, .back')
-      .forEach((el) => {
-        el.onclick = (e) => {
-          e.preventDefault();
-          modalZuckContainer.modal.close();
-        };
-      });
+    .querySelectorAll<HTMLDivElement>('.close, .back')
+    .forEach((el) => {
+      el.onclick = (e) => {
+        e.preventDefault();
+        modalZuckContainer.modal.close();
+      };
+    });
 
     storyViewer.appendChild(slides);
 
-    if (className === 'viewing') {
+    if(className === 'viewing') {
       zuck.playVideoItem(
         storyViewer,
         storyViewer.querySelectorAll<HTMLElement>(
@@ -407,39 +402,38 @@ export const modal = (zuck: ZuckObject) => {
     }
 
     storyViewer
-      .querySelectorAll<HTMLDivElement>(
-        '.slides-pointers [data-index] > .progress'
-      )
-      .forEach((el) => {
-        onAnimationEnd(el, () => {
-          zuck.nextItem(undefined);
-        });
+    .querySelectorAll<HTMLDivElement>(
+      '.slides-pointers [data-index] > .progress'
+    )
+    .forEach((el) => {
+      onAnimationEnd(el, () => {
+        zuck.nextItem(undefined);
       });
+    });
 
-    if (!modalSlider) {
+    if(!modalSlider) {
       return;
     }
 
-    if (className === 'previous') {
+    if(className === 'previous') {
       prepend(modalSlider, storyViewer);
     } else {
       modalSlider.appendChild(storyViewer);
     }
   };
 
-  const createStoryTouchEvents = function (modalSlider: Maybe<HTMLElement>) {
-    const modalContainer =
-      document.querySelector<ModalContainer>('#zuck-modal');
+  const createStoryTouchEvents = function(modalSlider: Maybe<HTMLElement>) {
+    const modalContainer = document.querySelector<ModalContainer>('#zuck-modal');
     const enableMouseEvents = true;
 
     let position: { x: number; y: number } | null | undefined = null;
     let touchOffset:
       | {
-          x: number;
-          y: number;
-          time: number;
-          valid: boolean;
-        }
+      x: number;
+      y: number;
+      time: number;
+      valid: boolean;
+    }
       | null
       | undefined = null;
     let isScrolling: boolean | null | undefined = null;
@@ -447,7 +441,10 @@ export const modal = (zuck: ZuckObject) => {
     let timer: ReturnType<typeof setTimeout> | undefined = undefined;
     let nextTimer: ReturnType<typeof setTimeout> | undefined = undefined;
 
-    const touchStart = function (event: TouchEvent | MouseEvent) {
+    const touchStart = function(event: TouchEvent | MouseEvent) {
+      const storyModal = document.querySelector<HTMLElement>(
+        '#zuck-modal'
+      );
       const storyViewer = document.querySelector<HTMLElement>(
         '#zuck-modal .viewing'
       );
@@ -455,7 +452,7 @@ export const modal = (zuck: ZuckObject) => {
         '#zuck-modal .story-viewer'
       );
 
-      if ((event.target as Node).nodeName === 'A') {
+      if((event.target as Node).nodeName === 'A') {
         return;
       }
 
@@ -466,9 +463,9 @@ export const modal = (zuck: ZuckObject) => {
         document.querySelector<HTMLElement>('#zuck-modal .story-viewer.viewing')
       );
 
-      if (modalContainer) {
+      if(modalContainer) {
         modalContainer.slideWidth = storyViewerWrap?.offsetWidth;
-        modalContainer.slideHeight = storyViewerWrap?.offsetHeight;
+        modalContainer.slideHeight = storyViewerWrap?.offsetHeight + storyModal.offsetTop;
       }
 
       position = {
@@ -486,7 +483,7 @@ export const modal = (zuck: ZuckObject) => {
         valid: true
       };
 
-      if (clientY < 80 || clientY > safeNum(modalContainer?.slideHeight) - 80) {
+      if(clientY < 56 || clientY > safeNum(modalContainer?.slideHeight)) {
         touchOffset.valid = false;
       } else {
         event.preventDefault();
@@ -494,7 +491,7 @@ export const modal = (zuck: ZuckObject) => {
         isScrolling = undefined;
         delta = {};
 
-        if (enableMouseEvents) {
+        if(enableMouseEvents) {
           modalSlider?.addEventListener('mousemove', touchMove);
           modalSlider?.addEventListener('mouseup', touchEnd);
           modalSlider?.addEventListener('mouseleave', touchEnd);
@@ -502,14 +499,14 @@ export const modal = (zuck: ZuckObject) => {
         modalSlider?.addEventListener('touchmove', touchMove);
         modalSlider?.addEventListener('touchend', touchEnd);
 
-        if (storyViewer) {
+        if(storyViewer) {
           storyViewer?.classList.add('paused');
         }
 
         zuck.pauseVideoItem();
 
         timer = setTimeout(() => {
-          if (storyViewer) {
+          if(storyViewer) {
             storyViewer?.classList.add('longPress');
           }
         }, 600);
@@ -521,26 +518,73 @@ export const modal = (zuck: ZuckObject) => {
       }
     };
 
-    const touchMove = function (event: TouchEvent | MouseEvent) {
+    const pauseSlide = () => {
+      const storyViewer = document.querySelector<HTMLElement>(
+        '#zuck-modal .viewing'
+      );
+
+      if(storyViewer) {
+        storyViewer?.classList.add('paused');
+      }
+
+      zuck.pauseVideoItem();
+
+      timer = setTimeout(() => {
+        if(storyViewer) {
+          storyViewer?.classList.add('longPress');
+        }
+      }, 600);
+
+      nextTimer = setTimeout(() => {
+        clearInterval(nextTimer);
+        nextTimer = undefined;
+      }, 250);
+    };
+
+    const resumeSlide = () => {
+      const storyViewer = document.querySelector<HTMLElement>(
+        '#zuck-modal .viewing'
+      );
+
+      if(timer) {
+        clearInterval(timer);
+      }
+
+      if(storyViewer) {
+        zuck.playVideoItem(
+          storyViewer,
+          storyViewer.querySelectorAll<HTMLElement>('.active'),
+          undefined
+        );
+        storyViewer?.classList.remove('longPress');
+        storyViewer?.classList.remove('paused');
+      }
+      if(nextTimer) {
+        clearInterval(nextTimer);
+        nextTimer = undefined;
+      }
+    };
+
+    const touchMove = function(event: TouchEvent | MouseEvent) {
       const touches = (event as TouchEvent).touches
         ? (event as TouchEvent).touches[0]
         : (event as MouseEvent);
       const clientX = touches.clientX;
       const clientY = touches.clientY;
 
-      if (touchOffset && touchOffset.valid) {
+      if(touchOffset && touchOffset.valid) {
         delta = {
           x: clientX - touchOffset.x,
           y: clientY - touchOffset.y
         };
 
-        if (typeof isScrolling === 'undefined') {
+        if(typeof isScrolling === 'undefined') {
           isScrolling = !!(
             isScrolling || Math.abs(delta.x) < Math.abs(delta.y)
           );
         }
 
-        if (!isScrolling && touchOffset) {
+        if(!isScrolling && touchOffset) {
           event.preventDefault();
 
           translate(
@@ -568,15 +612,15 @@ export const modal = (zuck: ZuckObject) => {
       const index = direction
         ? document.querySelector<HTMLElement>('#zuck-modal .story-viewer.next')
         : document.querySelector<HTMLElement>(
-            '#zuck-modal .story-viewer.previous'
-          );
+          '#zuck-modal .story-viewer.previous'
+        );
       const isOutOfBounds = (direction && !index) || (!direction && !index);
 
-      if (touchOffset && !touchOffset.valid) {
+      if(touchOffset && !touchOffset.valid) {
       } else {
-        if (delta) {
-          if (!isScrolling) {
-            if (isValid && !isOutOfBounds) {
+        if(delta) {
+          if(!isScrolling) {
+            if(isValid && !isOutOfBounds) {
               moveStoryItem(direction);
             } else {
               translate(modalSlider, safeNum(position?.x), 300);
@@ -585,7 +629,7 @@ export const modal = (zuck: ZuckObject) => {
 
           touchOffset = undefined;
 
-          if (enableMouseEvents) {
+          if(enableMouseEvents) {
             modalSlider?.removeEventListener('mousemove', touchMove);
             modalSlider?.removeEventListener('mouseup', touchEnd);
             modalSlider?.removeEventListener('mouseleave', touchEnd);
@@ -596,11 +640,11 @@ export const modal = (zuck: ZuckObject) => {
 
         const video = zuck.internalData.currentVideoElement;
 
-        if (timer) {
+        if(timer) {
           clearInterval(timer);
         }
 
-        if (storyViewer) {
+        if(storyViewer) {
           zuck.playVideoItem(
             storyViewer,
             storyViewer.querySelectorAll<HTMLElement>('.active'),
@@ -610,23 +654,25 @@ export const modal = (zuck: ZuckObject) => {
           storyViewer?.classList.remove('paused');
         }
 
-        if (nextTimer) {
+        if(nextTimer) {
           clearInterval(nextTimer);
           nextTimer = undefined;
 
           const navigateItem = () => {
-            if (!direction) {
-              if (
-                safeNum(lastTouchOffset?.x) > document.body.offsetWidth / 3 ||
+
+            if(!direction) {
+
+              if(
+                safeNum(lastTouchOffset?.x) > storyViewer.offsetWidth / 2 + storyViewer.getBoundingClientRect().x ||
                 !zuck.option('previousTap')
               ) {
-                if (zuck.option('rtl')) {
+                if(zuck.option('rtl')) {
                   zuck.navigateItem('previous', event);
                 } else {
                   zuck.navigateItem('next', event);
                 }
               } else {
-                if (zuck.option('rtl')) {
+                if(zuck.option('rtl')) {
                   zuck.navigateItem('next', event);
                 } else {
                   zuck.navigateItem('previous', event);
@@ -639,12 +685,12 @@ export const modal = (zuck: ZuckObject) => {
             '#zuck-modal .viewing'
           );
 
-          if (storyViewerViewing && video) {
-            if (storyViewerViewing?.classList.contains('muted')) {
+          if(storyViewerViewing && video) {
+            /*if(storyViewerViewing?.classList.contains('muted')) {
               zuck.unmuteVideoItem(video, storyViewerViewing);
-            } else {
-              navigateItem();
-            }
+            } else {*/
+            navigateItem();
+            /*}*/
           } else {
             navigateItem();
 
@@ -655,16 +701,21 @@ export const modal = (zuck: ZuckObject) => {
     };
 
     modalSlider?.addEventListener('touchstart', touchStart);
-    if (enableMouseEvents) {
+    if(enableMouseEvents) {
       modalSlider?.addEventListener('mousedown', touchStart);
     }
+
+    return {
+      pauseSlide,
+      resumeSlide
+    };
   };
 
-  const getStoryMorningGlory = function (what: 'previous' | 'next' | '') {
+  const getStoryMorningGlory = function(what: 'previous' | 'next' | '') {
     // my wife told me to stop singing Wonderwall. I SAID MAYBE.
     const currentStory = zuck.internalData.currentStory;
 
-    if (currentStory && what !== '') {
+    if(currentStory && what !== '') {
       const element = document.querySelector<HTMLElement>(
         `#${id} [data-id="${currentStory}"]`
       );
@@ -674,7 +725,7 @@ export const modal = (zuck: ZuckObject) => {
           ? element.previousElementSibling
           : element.nextElementSibling;
 
-      if (foundStory) {
+      if(foundStory) {
         const storyId = foundStory.getAttribute('data-id');
         const storyIndex = zuck.findStoryIndex(storyId);
         const data = zuck.data[storyIndex] || false;
@@ -689,13 +740,13 @@ export const modal = (zuck: ZuckObject) => {
     const modalContainer =
       document.querySelector<ModalContainer>('#zuck-modal');
 
-    const callback = function () {
+    const callback = function() {
       const modalContent = document.querySelector<HTMLElement>(
         '#zuck-modal-content'
       );
       modalContent.innerHTML = `<div id="zuck-modal-slider-${id}" class="slider"></div>`;
 
-      if (!modalContent || !storyId) {
+      if(!modalContent || !storyId) {
         return;
       }
 
@@ -706,33 +757,36 @@ export const modal = (zuck: ZuckObject) => {
         `#zuck-modal-slider-${id}`
       );
 
-      createStoryTouchEvents(modalSlider);
+      const {pauseSlide, resumeSlide} = createStoryTouchEvents(modalSlider);
+
+      zuck.pauseSlide = pauseSlide;
+      zuck.resumeSlide = resumeSlide;
 
       zuck.internalData.currentStory = storyId;
       storyData.currentItem = currentItem;
 
-      if (zuck.option('backNative') && hasWindow()) {
+      if(zuck.option('backNative') && hasWindow()) {
         window.location.hash = `#!${id}`;
       }
 
       const previousItemData = getStoryMorningGlory('previous');
-      if (previousItemData) {
+      if(previousItemData) {
         createStoryViewer(previousItemData, 'previous');
       }
 
       createStoryViewer(storyData, 'viewing', true);
 
       const nextItemData = getStoryMorningGlory('next');
-      if (nextItemData) {
+      if(nextItemData) {
         createStoryViewer(nextItemData, 'next');
       }
 
-      if (zuck.option('autoFullScreen')) {
+      if(zuck.option('autoFullScreen')) {
         modalContainer?.classList.add('fullscreen');
       }
 
       const tryFullScreen = () => {
-        if (
+        if(
           modalContainer?.classList.contains('fullscreen') &&
           zuck.option('autoFullScreen') &&
           document.body.offsetWidth <= 1024
@@ -747,7 +801,7 @@ export const modal = (zuck: ZuckObject) => {
         '#zuck-modal .story-viewer'
       );
 
-      if (zuck.option('openEffect') && modalContainer) {
+      if(zuck.option('openEffect') && modalContainer) {
         const storyEl = document.querySelector<HTMLElement>(
           `#${id} [data-id="${storyId}"] .item-preview`
         );
@@ -772,7 +826,7 @@ export const modal = (zuck: ZuckObject) => {
           tryFullScreen();
         }, 300); // because effects
       } else {
-        if (modalContainer) {
+        if(modalContainer) {
           modalContainer.style.display = 'block';
           modalContainer.slideWidth = storyViewerWrap?.offsetWidth || 0;
         }
@@ -786,14 +840,14 @@ export const modal = (zuck: ZuckObject) => {
     zuck.callback('onOpen')(storyId, callback);
   };
   const next = () => {
-    const callback = function () {
+    const callback = function() {
       const lastStory = zuck.internalData.currentStory;
       const lastStoryIndex = zuck.findStoryIndex(lastStory);
       const lastStoryTimelineElement = document.querySelector<HTMLElement>(
         `#${id} [data-id="${lastStory}"]`
       );
 
-      if (lastStoryTimelineElement) {
+      if(lastStoryTimelineElement) {
         lastStoryTimelineElement?.classList.add('seen');
 
         zuck.data[lastStoryIndex].seen = true;
@@ -806,10 +860,10 @@ export const modal = (zuck: ZuckObject) => {
       const stories = document.querySelector<HTMLElement>(
         '#zuck-modal .story-viewer.next'
       );
-      if (!stories) {
+      if(!stories) {
         modalZuckContainer.modal.close();
       } else {
-        if (zuck.option('rtl')) {
+        if(zuck.option('rtl')) {
           moveStoryItem(false);
         } else {
           moveStoryItem(true);
@@ -827,18 +881,18 @@ export const modal = (zuck: ZuckObject) => {
       '#zuck-modal-content'
     );
 
-    const callback = function () {
-      if (zuck.option('backNative') && hasWindow()) {
+    const callback = function() {
+      if(zuck.option('backNative') && hasWindow()) {
         window.location.hash = '';
       }
 
       fullScreen(modalContainer, true);
 
-      if (modalContainer) {
-        if (zuck.option('openEffect')) {
+      if(modalContainer) {
+        if(zuck.option('openEffect')) {
           modalContainer.classList.add('closed');
         } else {
-          if (modalContent) {
+          if(modalContent) {
             modalContent.innerHTML = '';
           }
 

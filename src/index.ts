@@ -566,7 +566,7 @@ export const Zuck: ZuckFunction = function (timeline, options) {
       updateStorySeenPosition,
       playVideoItem,
       pauseVideoItem,
-      unmuteVideoItem
+      unmuteVideoItem,
     };
   };
 
