@@ -28,13 +28,20 @@ export const modal = (zuck: ZuckObject) => {
     modalZuckContainer.style.display = 'none';
 
     modalZuckContainer.setAttribute('tabIndex', '1');
-    modalZuckContainer.onkeyup = ({keyCode}) => {
-      const code = keyCode;
-
-      if(code === 27) {
-        modalZuckContainer.modal.close();
-      } else if(/*code === 13 ||*/ code === 32) {
-        modalZuckContainer.modal.next();
+    modalZuckContainer.onkeyup = ({code}) => {
+      switch(code) {
+        case 'Escape': {
+          modalZuckContainer.modal.close();
+          break;
+        }
+        case 'ArrowRight': {
+          zuck.navigateItem('next');
+          break;
+        }
+        case 'ArrowLeft': {
+          zuck.navigateItem('previous');
+          break;
+        }
       }
     };
 
